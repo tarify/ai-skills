@@ -22,6 +22,65 @@ description: |
 
 通用开发流程规范，提供任务分级、角色分工、工具组合和流程阶段的标准指南。
 
+## 首次使用配置
+
+> **⚠️ 重要**：首次使用此 skill 前，需要初始化配置文件。
+
+### 检测配置文件
+
+配置文件查找顺序：
+```
+1. ./.dev-workflow.yaml        （项目级别）
+2. ~/.dev-workflow.yaml        （Home 目录）
+3. ~/.config/dev-workflow.yaml （XDG 标准位置）
+```
+
+### 没有配置文件时
+
+如果未找到配置文件，询问用户：
+
+```
+⚠️ 检测到首次使用，未找到配置文件。
+
+请选择配置文件存放位置：
+1. 项目级别：./.dev-workflow.yaml（仅当前项目使用）
+2. 用户级别：~/.dev-workflow.yaml（所有项目共享）
+3. 标准位置：~/.config/dev-workflow.yaml（XDG 标准）
+
+是否初始化配置？[Y/n]
+```
+
+用户确认后，运行：
+```bash
+python scripts/detect-environment.py --init --path <用户选择的路径>
+```
+
+### 配置文件模板
+
+默认使用 `subagent` 模式：
+
+```yaml
+# dev-workflow 配置文件
+tool_priority:
+  execution:
+    primary: subagent    # 执行工具
+  review:
+    primary: subagent    # 审查工具
+```
+
+### 支持的工具选项
+
+| 工具 | 用途 | 配置值 |
+|------|------|--------|
+| Subagent（默认） | 子代理执行/审查 | `subagent` |
+| CodeBuddy | 执行工具 | `codebuddy` |
+| Codex | 执行/审查 | `codex` |
+| Claude Code | 执行工具 | `claude-code` |
+| Cursor | 执行工具 | `cursor` |
+| Aider | 执行工具 | `aider` |
+
+> **💡 提示**：如果不清楚有哪些工具，保持默认 `subagent` 模式即可。
+
 ## 快速参考
 
 ```yaml
@@ -75,37 +134,7 @@ L3 审查: 审查工具 或分析工具
 | **Reviewing** | 审查者：独立验证、评估质量 (L3) | 30-review.yaml |
 | **Delivery** | 协调者：汇总结果、交付用户 | 40-delivery.yaml |
 
-## 环境检测
-
-运行环境检测脚本获取当前配置：
-
-```bash
-python scripts/detect-environment.py
-```
-
-输出示例：
-
-```yaml
-environment:
-  mode: main_agent
-  tools:
-    execution_tool: available  # 用户配置的执行工具
-    review_tool: available     # 用户配置的审查工具
-    git: available
-    python: available
-  recommendations:
-    execution_backend: <用户配置的执行工具>
-    review_backend: <用户配置的审查工具>
-```
-
-> **首次使用提醒**：如果是第一次使用此 skill，请先配置您的执行工具和审查工具。
-> 详见 [初始化配置](#初始化配置) 章节。
-
-详细检测逻辑参见 [references/environment-detection.md](references/environment-detection.md)。
-
 ## 运行模式选择
-
-根据环境检测结果选择执行模式：
 
 ### 主代理模式
 
@@ -137,7 +166,6 @@ environment:
 ## 工具调用规范
 
 > **说明**：本 skill 不绑定特定工具，以下为示例性说明。实际工具调用方式取决于用户配置。
-> 配置方法参见 [用户配置模板](references/user-config-template.md)。
 
 ### 执行阶段 (Building)
 
@@ -155,6 +183,7 @@ codex exec "<prompt>" --json
 ```
 
 验证执行结果：
+
 - 检查文件是否创建/修改
 - 对照验收标准逐项检查
 
@@ -198,76 +227,6 @@ backend_calls:
 - [ ] Review 文件存在
 - [ ] 审查结论为 approved
 - [ ] 对照验收标准检查通过
-
-## 首次使用
-
-> **🎯 首次使用提醒**：使用此 skill 前需要进行工具配置。
-> 运行以下命令进行初始化：
->
-> ```bash
-> python scripts/detect-environment.py --init
-> ```
->
-> 此命令将创建默认配置文件（subagent 模式），无需安装额外工具。
-
-### 配置文件位置
-
-**默认位置**：`~/.config/dev-workflow.yaml`（跨平台通用）
-
-**可选位置**：
-- `~/.dev-workflow.yaml`（简化版，放在 home 目录）
-- `./.dev-workflow.yaml`（项目级别，放在当前工作目录）
-
-> **说明**：检测脚本会依次查找：项目目录 → home 目录 → .config 目录
-
-### 默认配置（Subagent 模式）
-
-```yaml
-# 默认配置 - 使用 subagent 执行和审查
-# 无需安装额外的 CLI 工具
-
-tool_priority:
-  execution:
-    primary: subagent    # 由主代理派发子代理执行
-  review:
-    primary: subagent    # 由主代理派发子代理审查
-```
-
-### 是否需要配置特定工具？
-
-**如果您有以下 CLI 工具**，可以修改配置以获得更好的体验：
-
-| 工具 | 用途 | 配置值 |
-|------|------|--------|
-| CodeBuddy | 执行工具 | `codebuddy` |
-| Codex | 执行/审查 | `codex` |
-| Claude Code | 执行工具 | `claude-code` |
-| Cursor | 执行工具 | `cursor` |
-| Aider | 执行工具 | `aider` |
-
-**配置示例（使用 CodeBuddy + Codex）**：
-
-```yaml
-tool_priority:
-  execution:
-    primary: codebuddy
-    fallback: subagent
-  review:
-    primary: codex
-    fallback: subagent
-```
-
-> **💡 提示**：如果不清楚自己有哪些工具，保持默认 subagent 模式即可，这是最灵活的选择。
-
-### 支持的工具类型
-
-| 类型 | 说明 | 适用场景 |
-|------|------|----------|
-| **Subagent** | 由主代理派发的子代理 | 默认推荐，无需额外安装 |
-| **CLI 工具** | 命令行代码助手 | 已安装 CodeBuddy/Codex/Claude Code 等 |
-| **自定义脚本** | 用户自定义脚本 | 有特定工作流需求 |
-
-更多配置选项见 [references/user-config-template.md](references/user-config-template.md)。
 
 ## 详细参考
 
