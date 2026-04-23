@@ -31,8 +31,8 @@ const REQUIRED_FILES = [
   'modules/writer-module.md',
   'modules/reviewer-module.md',
   'modules/coordinator-module.md',
-  'skills/xiaoye-writing-mode/SKILL.md',
-  'skills/xiaoye-writing-mode/README.md'
+
+
 ];
 
 // 需要创建的空目录
