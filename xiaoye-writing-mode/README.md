@@ -53,13 +53,44 @@ cp -r xiaoye-writing-mode/* ~/.openclaw/skills/xiaoye-writing-mode/
 
 ## 初始化工作空间
 
-首次使用前，将 `scaffold/` 目录下的文件复制到你的小说项目工作区：
+### 方式一：脚本自动初始化（推荐）
+
+```bash
+node xiaoye-writing-mode/init-workspace.js /your/novel/project
+```
+
+脚本会自动检查目标目录，**只复制缺失的文件**，已有文件不会被覆盖。执行结果示例：
+
+```
+[writing-mode] 检查工作区配置: /your/novel/project
+[writing-mode] 创建目录: rules
+[writing-mode] 创建目录: writing-archive
+[writing-mode] 创建文件: AGENTS.md
+[writing-mode] 创建文件: rules/写作规范.md
+[writing-mode] 工作区初始化完成 ✅
+```
+
+不传路径时默认初始化当前目录：
+
+```bash
+cd /your/novel/project
+node /path/to/xiaoye-writing-mode/init-workspace.js
+```
+
+也可以在代码中调用：
+
+```js
+const { initWorkspace } = require('./xiaoye-writing-mode/init-workspace.js');
+await initWorkspace('/your/novel/project');
+```
+
+### 方式二：手动复制
 
 ```bash
 cp -r xiaoye-writing-mode/scaffold/* /your/novel/project/
 ```
 
-这会创建以下配置文件：
+初始化后工作区结构：
 
 ```
 your-project/
@@ -68,7 +99,9 @@ your-project/
 ├── MEMORY.md         # 长期记忆模板
 ├── modules/          # 功能模块定义
 ├── rules/            # 创作规则
-└── templates/        # 常用模板
+├── templates/        # 常用模板
+├── writing-archive/  # 章节正文归档（运行时自动创建内容）
+└── memory/           # 评审报告与进度追踪
 ```
 
 > `SOUL.md` 底部有自定义说明，可以为你的项目配置专属角色名称和风格。
