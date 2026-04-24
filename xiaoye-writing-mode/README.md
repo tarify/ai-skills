@@ -1,103 +1,160 @@
-# 小夜创作模式 Skill
+# Writing Mode Skill
 
-这个 skill 将小说创作方法论抽象成了可复用的标准化创作模式，不依赖任何特定平台或工具。
+系统化长篇小说创作技能，将创作方法论抽象为可复用的标准化流程。**平台无关、题材无关**，适用于任何 AI 工具和任何小说类型。
 
 ## 核心特性
 
-- **任务分级体系**：L0即时答复 → L1单步执行 → L2流程编排 → L3后台辅助
-- **功能模块化**：创作、评审、管理三大模块
-- **流程编排**：标准化的创作并评审流程
-- **后台辅助**：支持大规模创作任务的并行处理
-- **完整归档**：自动化的文件管理体系
+- **任务分级**：L0 即时答复 → L1 单步执行 → L2 流程编排 → L3 后台辅助
+- **辩证创作**：多角度分析 + 逻辑检验 + 自我批判，产出更高质量的内容
+- **全题材覆盖**：玄幻 / 都市 / 言情 / 悬疑 / 科幻 / 历史 / 奇幻，每种题材有专项规范
+- **标准化评审**：四维度评分体系（逻辑一致性 40% / 可读性 30% / 创新性 20% / 完整性 10%）
+- **自动归档**：章节正文、章节简介、评审报告、设定文档全部自动归档
+- **上下文连贯**：创作前自动读取前 3 章简介，保持长篇叙事一致性
 
-## 使用方法
+## 适用工具
 
-### 1. 安装 Skill
-
-**方式一：通过 Git 克隆**
-```bash
-git clone https://github.com/tarify/ai-skills.git
-cd ai-skills
-```
-
-**方式二：下载压缩包**
-直接下载 `xiaoye-writing-mode` 文件夹到你本地的 skill 目录。
-
-### 2. 注册到 CodeBuddy / OpenClaw
-
-**Windows (PowerShell):**
-```powershell
-# 以管理员身份运行 PowerShell
-./register-shared-skill.ps1 -SkillName "xiaoye-writing-mode"
-```
-
-**手动注册（符号链接）：**
-```bash
-# Codex
-cd ~/.codex/skills/user
-ln -s ~/shared-skills/xiaoye-writing-mode xiaoye-writing-mode
-
-# OpenClaw
-cd ~/.openclaw/skills
-ln -s ~/shared-skills/xiaoye-writing-mode xiaoye-writing-mode
-```
-
-### 3. 初始化工作空间
-
-首次激活 skill 时，系统会自动检查并初始化配置。如需手动运行：
-
-```bash
-node init-workspace.js
-```
-
-这会在当前工作目录创建以下配置文件：
-- `AGENTS.md` - Agent 配置
-- `SOUL.md` - 角色设定
-- `MEMORY.md` - 用户偏好记忆
-- `rules/` - 创作规则文档
-- `templates/` - 常用模板
-- `modules/` - 功能模块文档
+OpenClaw / CodeBuddy / Cursor / Claude / ChatGPT 等任意 AI 工具
 
 ## 触发词
 
-使用以下关键词激活 skill：
-- `小夜，开启创作模式`
-- `进入写作模式`
-- `开始创作`
-- `写一篇小说`
+```
+写小说 / 帮我写 / 续写 / 创作章节 / 写第X章
+评审章节 / 评审第X章 / 创作并评审
+辩证创作 / 多角度分析
+查看进度 / 小说待办
+使用写作模式 / 系统化创作
+```
+
+## 安装
+
+**方式一：Git clone**
+```bash
+git clone https://github.com/tarify/ai-skills.git
+```
+
+**方式二：只下载本 skill**
+```bash
+git clone --depth 1 --filter=blob:none --sparse https://github.com/tarify/ai-skills.git
+cd ai-skills
+git sparse-checkout set xiaoye-writing-mode
+```
+
+### 注册到 CodeBuddy
+```bash
+mkdir -p ~/.codebuddy/skills/xiaoye-writing-mode
+cp -r xiaoye-writing-mode/* ~/.codebuddy/skills/xiaoye-writing-mode/
+```
+
+### 注册到 OpenClaw
+```bash
+mkdir -p ~/.openclaw/skills/xiaoye-writing-mode
+cp -r xiaoye-writing-mode/* ~/.openclaw/skills/xiaoye-writing-mode/
+```
+
+## 初始化工作空间
+
+首次使用前，将 `scaffold/` 目录下的文件复制到你的小说项目工作区：
+
+```bash
+cp -r xiaoye-writing-mode/scaffold/* /your/novel/project/
+```
+
+这会创建以下配置文件：
+
+```
+your-project/
+├── AGENTS.md         # AI 架构配置
+├── SOUL.md           # 写作助手身份（可自定义角色名）
+├── MEMORY.md         # 长期记忆模板
+├── modules/          # 功能模块定义
+├── rules/            # 创作规则
+└── templates/        # 常用模板
+```
+
+> `SOUL.md` 底部有自定义说明，可以为你的项目配置专属角色名称和风格。
 
 ## 文件结构
 
 ```
 xiaoye-writing-mode/
-├── SKILL.md              # 技能定义和完整方法论
-├── README.md             # 使用说明
-├── init-workspace.js     # 初始化脚本
-└── scaffold/             # 配置模板
-    ├── AGENTS.md         # Agent 配置
-    ├── SOUL.md           # 角色设定
-    ├── MEMORY.md         # 记忆模板
-    ├── modules/          # 功能模块
-    │   ├── writer-module.md
-    │   ├── reviewer-module.md
-    │   └── coordinator-module.md
-    ├── rules/            # 创作规则
-    │   ├── 写作规范.md
-    │   ├── 评审标准.md
-    │   └── 管理流程.md
-    └── templates/        # 模板文件
-        ├── 大纲模板.md
-        ├── 人物卡模板.md
-        ├── 辩证分析模板.md
-        ├── 评审报告模板.md
-        ├── 项目看板模板.md
-        └── 后台任务指南.md
+├── SKILL.md                    # 技能定义（触发词、架构、流程）
+├── README.md                   # 本文件
+└── scaffold/                   # 工作区配置模板
+    ├── AGENTS.md               # AI 架构与任务分级
+    ├── SOUL.md                 # 写作助手身份模板
+    ├── MEMORY.md               # 长期记忆模板
+    ├── modules/
+    │   ├── writer-module.md    # 创作模块
+    │   ├── reviewer-module.md  # 评审模块
+    │   └── coordinator-module.md # 管理模块
+    ├── rules/
+    │   ├── 写作规范.md          # 通用规范 + 各题材专项规范
+    │   ├── 评审标准.md          # 四维度评分体系
+    │   └── 管理流程.md          # 归档与进度管理
+    └── templates/
+        ├── 辩证分析模板.md      # 辩证创作思考框架
+        ├── 评审报告模板.md      # 评审报告格式
+        ├── 大纲模板.md          # 故事大纲
+        ├── 人物卡模板.md        # 人物设定
+        ├── 项目看板模板.md      # 进度看板
+        └── 后台任务指南.md      # L3 后台任务说明
 ```
 
-## 适用场景
+## 工作区归档结构
 
-适用于任何小说创作项目，特别是：
-- 长篇小说的章节创作
-- 多人协作的创作项目
-- 需要标准化流程的出版级作品
-- 学习系统化写作方法的作者
+skill 运行后会在工作区自动创建以下目录：
+
+```
+your-project/
+├── writing-archive/
+│   └── {项目名}/
+│       ├── 章节/
+│       │   ├── 第1章-{标题}.md
+│       │   └── 章节简介/        # 每章独立简介，创作前自动读取
+│       └── 设定/
+│           ├── 人物/
+│           ├── 世界观/
+│           └── 情节/
+└── memory/
+    └── projects/
+        └── {项目名}/
+            ├── reviews/         # 评审报告
+            ├── progress.md      # 进度追踪
+            └── todo.md          # 待办事项
+```
+
+## 快速上手
+
+```
+# 查看项目进度
+进度
+
+# 创作新章节
+写第三章，推进主角成长，目标3000字
+
+# 创作并自动评审
+创作并评审第三章
+
+# 辩证创作（多角度分析后产出）
+用辩证方法写第三章的转折点
+
+# 评审已有章节
+评审第二章
+```
+
+## 题材专项规范
+
+`rules/写作规范.md` 包含以下题材的专项规范：
+
+| 题材 | 核心规范要点 |
+|------|------------|
+| 玄幻 / 奇幻 | 力量体系描写、境界感官化、世界观渐进揭示 |
+| 都市 / 现实 | 爽点铺垫、对话口语化、生活细节真实感 |
+| 言情 | 情感节奏分层、误会合理性、甜虐平衡 |
+| 悬疑 / 推理 | 线索预埋、信息节奏、推理透明度 |
+| 科幻 | 科技感营造、禁用现代工业词汇、设定一致性 |
+| 历史 / 古风 | 时代感对话、称谓制度、架空逻辑自洽 |
+
+## License
+
+MIT
