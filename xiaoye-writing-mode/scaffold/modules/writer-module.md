@@ -2,7 +2,7 @@
 
 ## 模块定义
 
-创作模块是 XiaoYe 的核心功能，负责小说内容创作。**这不是独立 Agent，而是 XiaoYe 主 Agent 的内置能力。**
+创作模块是 写作模式的核心功能，负责小说内容创作。**这不是独立 Agent，而是 主控 AI 的内置能力。**
 
 ---
 
@@ -23,14 +23,14 @@
 
 2. Read 设定文件（世界观、人物、情节）
 3. ⭐ Read 前3章章节简介（如存在）
-   - 路径：novels-archive/{project}/章节/章节简介/第{n}章-{标题}.md
+   - 路径：writing-archive/{project}/章节/章节简介/第{n}章-{标题}.md
    - 规则：创作第N章时，读取第N-3到第N-1章的简介文件
    - 第一章创作时跳过此步骤
 4. Read 前文章节（如有）
 5. 应用辩证分析模板思考
 6. 创作内容
 7. 自我批判和可读性检查
-8. Write 归档到 novels-archive/
+8. Write 归档到 writing-archive/
 9. ⭐ 触发管理模块更新章节简介
 10. 更新 progress.md
 ```
@@ -45,10 +45,10 @@
 |----------|------|------|------|
 | 写作规范 | `rules/写作规范.md` | 创作准则 | ✅ |
 | 辩证分析模板 | `templates/辩证分析模板.md` | 思考框架 | ✅ |
-| 世界观设定 | `novels-archive/{project}/设定/世界观/` | 背景规则 | ✅ |
-| 人物设定 | `novels-archive/{project}/设定/人物/` | 角色信息 | ✅ |
-| 前文章节 | `novels-archive/{project}/章节/` | 连贯性 | ✅ |
-| ⭐ 章节简介 | `novels-archive/{project}/章节/章节简介/` | 前3章概要 | ✅ 如存在 |
+| 世界观设定 | `writing-archive/{project}/设定/世界观/` | 背景规则 | ✅ |
+| 人物设定 | `writing-archive/{project}/设定/人物/` | 角色信息 | ✅ |
+| 前文章节 | `writing-archive/{project}/章节/` | 连贯性 | ✅ |
+| ⭐ 章节简介 | `writing-archive/{project}/章节/章节简介/` | 前3章概要 | ✅ 如存在 |
 
 ### ⭐ 前置条件检查机制
 
@@ -101,7 +101,7 @@
 
 输出：
 - 章节正文
-- 归档路径：novels-archive/{project}/章节/第{n}章-{标题}.md
+- 归档路径：writing-archive/{project}/章节/第{n}章-{标题}.md
 ```
 
 ### 创作人物卡
@@ -114,7 +114,7 @@
 
 输出：
 - 人物卡文档
-- 归档路径：novels-archive/{project}/设定/人物/{name}.md
+- 归档路径：writing-archive/{project}/设定/人物/{name}.md
 ```
 
 ### 创作世界观设定
@@ -126,7 +126,7 @@
 
 输出：
 - 世界观文档
-- 归档路径：novels-archive/{project}/设定/世界观/{topic}.md
+- 归档路径：writing-archive/{project}/设定/世界观/{topic}.md
 ```
 
 ### 创作情节大纲
@@ -139,7 +139,7 @@
 
 输出：
 - 大纲文档
-- 归档路径：novels-archive/{project}/设定/情节/{topic}.md
+- 归档路径：writing-archive/{project}/设定/情节/{topic}.md
 ```
 
 ---
@@ -151,7 +151,7 @@
 ### 方案 A: sessions_spawn
 
 ```
-sessions_spawn(
+当前工具后台机制(
   task="创作{项目名}第三章，完整的战斗场景，5000字以上...",
   runTimeoutSeconds=1800
 )
@@ -176,7 +176,7 @@ Agent(
 
 ## 完成后动作
 
-创作完成后，XiaoYe 自动执行：
+创作完成后，AI 自动执行：
 
 1. Write 归档内容
 2. Edit 更新 progress.md（章节数、字数）
@@ -190,19 +190,19 @@ Agent(
 ```
 用户：创作第三章，推进主角的成长
 
-XiaoYe 执行：
+AI 执行：
 
 ⭐ [前置条件检查]
 □ 项目设定：待读取 ✓
 □ 前3章简介：待读取（创作第3章，需读取第1-2章简介）✓
 □ 辩证分析模板：待读取 ✓
 
-[Read] novels-archive/{项目名}/设定/世界观/*.md
-[Read] novels-archive/{项目名}/设定/人物/{主角名}.md
-⭐ [Read] novels-archive/{项目名}/章节/章节简介/第一章-{标题}.md
-⭐ [Read] novels-archive/{项目名}/章节/章节简介/第二章-{标题}.md
+[Read] writing-archive/{项目名}/设定/世界观/*.md
+[Read] writing-archive/{项目名}/设定/人物/{主角名}.md
+⭐ [Read] writing-archive/{项目名}/章节/章节简介/第一章-{标题}.md
+⭐ [Read] writing-archive/{项目名}/章节/章节简介/第二章-{标题}.md
     → 获取第1章、第2章简介，了解前文脉络
-[Read] novels-archive/{项目名}/章节/第二章-{标题}.md
+[Read] writing-archive/{项目名}/章节/第二章-{标题}.md
 [Read] rules/写作规范.md
 [Read] templates/辩证分析模板.md
 
@@ -218,10 +218,10 @@ XiaoYe 执行：
 - 问题1：节奏稍快
 - 修正：增加过渡段落
 
-[Write] novels-archive/{项目名}/章节/第三章.md
+[Write] writing-archive/{项目名}/章节/第三章.md
 
 ⭐ [MODIFY_TRIGGER] 触发管理模块：
-[Write] novels-archive/{项目名}/章节/章节简介/第三章-{标题}.md
+[Write] writing-archive/{项目名}/章节/章节简介/第三章-{标题}.md
 创建第三章简介文件
 
 [Edit] memory/projects/{项目名}/progress.md
@@ -234,4 +234,4 @@ XiaoYe 执行：
 
 *Writer Module v2.1*
 *新增：前置条件检查 + 读取前3章简介 + [MODIFY_TRIGGER] 触发简介更新*
-*XiaoYe 内置创作能力*
+*Writing Mode 内置创作能力*

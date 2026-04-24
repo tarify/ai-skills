@@ -2,7 +2,7 @@
 
 ## 模块定义
 
-管理模块是 XiaoYe 的文档归档和项目追踪能力，负责维护项目状态、TODO 管理和进度追踪。**这不是独立 Agent，而是 XiaoYe 主 Agent 的内置能力。**
+管理模块是写作模式的文档归档和项目追踪能力，负责维护项目状态、TODO 管理和进度追踪。**这不是独立 Agent，而是主控 AI 的内置能力。**
 
 **重要**：每次创作或评审产出后，管理模块自动执行归档和更新。
 
@@ -12,16 +12,15 @@
 
 ### 1. 文档归档
 
-- 创作内容 → 归档到 `novels-archive/`
+- 创作内容 → 归档到 `writing-archive/`
 - 评审报告 → 归档到 `memory/projects/reviews/`
 
-### 2. 章节简介管理 ⭐ 新增
+### 2. 章节简介管理 ⭐
 
 - 创作新章节后 → 自动生成对应章节简介
 - 修改章节内容后 → **[MODIFY_TRIGGER]** 强制更新对应章节简介
 - 评审后修改章节 → **[MODIFY_TRIGGER]** 强制更新对应章节简介
-- 章节简介存储路径：`novels-archive/{project}/章节/章节简介.md`
-- 简介内容包含：内容概述、情节发展、角色成长、衔接点、伏笔线索
+- 章节简介存储路径：`writing-archive/{project}/章节/章节简介/`
 
 ### 3. TODO 管理
 
@@ -55,20 +54,18 @@
 
 | 内容类型 | 归档路径 | 示例 |
 |----------|----------|------|
-| 章节正文 | `novels-archive/{project}/章节/第{n}章-{标题}.md` | `第3章-血战.md` |
-| **章节简介** ⭐ | `novels-archive/{project}/章节/章节简介/第{n}章-{标题}.md` | 每章独立文件 |
-| 人物设定 | `novels-archive/{project}/设定/人物/{name}.md` | `主角名.md` |
-| 世界观 | `novels-archive/{project}/设定/世界观/{topic}.md` | `设定名.md` |
-| 情节设定 | `novels-archive/{project}/设定/情节/{topic}.md` | `主线大纲.md` |
+| 章节正文 | `writing-archive/{project}/章节/第{n}章-{标题}.md` | `第3章-血战.md` |
+| **章节简介** ⭐ | `writing-archive/{project}/章节/章节简介/第{n}章-{标题}.md` | 每章独立文件 |
+| 人物设定 | `writing-archive/{project}/设定/人物/{name}.md` | `主角名.md` |
+| 世界观 | `writing-archive/{project}/设定/世界观/{topic}.md` | `设定名.md` |
+| 情节设定 | `writing-archive/{project}/设定/情节/{topic}.md` | `主线大纲.md` |
 | 评审报告 | `memory/projects/{project}/reviews/第{n}章-评审报告.md` | `第3章-评审报告.md` |
 
 ### 章节简介格式
 
-每章简介为独立文件，存储在 `novels-archive/{project}/章节/章节简介/` 目录下。
+每章简介为独立文件，存储在 `writing-archive/{project}/章节/章节简介/` 目录下。
 
 文件命名：`第{n}章-{标题}.md`
-
-每章简介包含以下结构：
 
 ```markdown
 # 第{n}章：{标题}
@@ -114,15 +111,16 @@ YYYY-MM-DD
 # 项目进度：{项目名}
 
 ## 基本信息
-- 项目ID：{唯一标识}
-- 创建时间：2026-04-18
+- 项目名：{项目名}
+- 题材：{玄幻/都市/言情/悬疑/科幻/历史/其他}
+- 创建时间：YYYY-MM-DD
 - 状态：创作中
 
 ## 章节进度
 | 章节 | 状态 | 字数 | 评审分 | 完成日期 |
 |------|------|------|--------|----------|
-| 第1章 | ✅ 已完成 | 3200 | ⭐4.2 | 2026-04-18 |
-| 第2章 | ✅ 已完成 | 3500 | ⭐4.4 | 2026-04-20 |
+| 第1章 | ✅ 已完成 | 3200 | ⭐4.2 | YYYY-MM-DD |
+| 第2章 | ✅ 已完成 | 3500 | ⭐4.4 | YYYY-MM-DD |
 | 第3章 | 📝 创作中 | - | - | - |
 
 ## 统计
@@ -182,10 +180,10 @@ YYYY-MM-DD
 
 执行：
 1. 确定归档路径（根据内容类型）
-2. Write 内容到目标路径
-3. Edit 更新项目索引
-4. Edit 更新 progress.md
-5. ⭐ [MODIFY_TRIGGER] 更新章节简介（生成或更新对应章节的简介条目）
+2. 写入内容到目标路径
+3. 更新项目索引
+4. 更新 progress.md
+5. ⭐ [MODIFY_TRIGGER] 更新章节简介（生成或更新对应章节的简介文件）
 
 输出：
 - 归档路径确认
@@ -199,10 +197,10 @@ YYYY-MM-DD
 触发：Reviewer Module 完成
 
 执行：
-1. Write 评审报告到 reviews/
+1. 写入评审报告到 reviews/
 2. 解析问题级别
-3. Edit todo.md 添加任务
-4. Edit progress.md 更新分数和趋势
+3. 更新 todo.md 添加任务
+4. 更新 progress.md 分数和趋势
 5. ⭐ 如章节被修改，[MODIFY_TRIGGER] 更新章节简介
 
 输出：
@@ -212,16 +210,16 @@ YYYY-MM-DD
 - 章节简介更新确认（如适用）
 ```
 
-### 更新章节简介 ⭐ 新增
+### 更新章节简介 ⭐
 
 ```
 触发：章节内容创作/修改后 [MODIFY_TRIGGER]
 
 执行：
-1. Read 当前章节内容
+1. 读取当前章节内容
 2. 提取：内容概述、情节发展、角色成长、衔接点、伏笔线索
-3. Read 章节简介.md（如存在）
-4. Edit 更新对应章节的简介条目（如不存在则创建文件）
+3. 读取章节简介文件（如存在）
+4. 写入/更新对应章节的简介文件
 5. 确认更新完成
 
 输出：
@@ -235,15 +233,15 @@ YYYY-MM-DD
 触发：用户指令"进度"、"状态"
 
 执行：
-1. Read progress.md
-2. Read todo.md
-3. Read 项目索引
+1. 读取 progress.md
+2. 读取 todo.md
+3. 读取项目索引
 
 输出：
 - 章节完成情况
 - 总字数统计
 - 平均评审分
-- 质量 trend
+- 质量趋势
 - 当前 TODO 清单
 ```
 
@@ -256,57 +254,31 @@ YYYY-MM-DD
 ```
 触发：第二章创作完成
 
-XiaoYe 执行：
-[Write] novels-archive/{项目名}/章节/第二章-{标题}.md
+AI 执行：
+[写入] writing-archive/{项目名}/章节/第二章-{标题}.md
 内容：{完整章节内容}
 
-[Edit] novels-archive/{项目名}/项目索引.md
+[更新] writing-archive/{项目名}/项目索引.md
 更新：章节列表添加第二章
 
-[Edit] memory/projects/{项目名}/progress.md
+[更新] memory/projects/{项目名}/progress.md
 更新：
 - 章节：第2章 ✅ 已完成
 - 字数：3500
 - 总字数：6700
 
 ⭐ [MODIFY_TRIGGER] 更新章节简介：
-[Read] novels-archive/{项目名}/章节/第二章-{标题}.md
-[Write] novels-archive/{项目名}/章节/章节简介/第二章-{标题}.md
+[读取] writing-archive/{项目名}/章节/第二章-{标题}.md
+[写入] writing-archive/{项目名}/章节/章节简介/第二章-{标题}.md
 创建/更新第二章简介文件：
 - 内容概述：{100-200字概述}
 - 情节发展：{关键事件}
 - 角色成长：{角色变化}
 - 衔接点：{承上启下的信息}
 - 伏笔线索：{伏笔和待解决的线索}
-- 最后更新：2026-04-22
+- 最后更新：YYYY-MM-DD
 
-[输出] 已归档第二章到 novels-archive/，字数3500，总进度6700字，章节简介已更新
-```
-
-### 归档评审报告
-
-```
-触发：第二章评审完成
-
-XiaoYe 执行：
-[Write] memory/projects/{项目名}/reviews/第2章-评审报告.md
-内容：{完整评审报告}
-
-[Read] 解析问题：
-- 🟡 第3段：战斗节奏稍快
-
-[Edit] memory/projects/{项目名}/todo.md
-添加：- 🟡 优化第2章：战斗节奏过渡
-
-[Edit] memory/projects/{项目名}/progress.md
-更新：
-- 第2章评审分：⭐4.4
-- 平均分：⭐4.3
-- 质量趋势：📈 提升
-
-⭐ 如章节被修改，[MODIFY_TRIGGER] 更新章节简介
-
-[输出] 已归档评审报告，新增1项TODO，质量趋势↑
+[输出] 已归档第二章，字数3500，总进度6700字，章节简介已更新
 ```
 
 ### 查询状态
@@ -314,9 +286,9 @@ XiaoYe 执行：
 ```
 用户：查看进度
 
-XiaoYe 执行：
-[Read] memory/projects/{项目名}/progress.md
-[Read] memory/projects/{项目名}/todo.md
+AI 执行：
+[读取] memory/projects/{项目名}/progress.md
+[读取] memory/projects/{项目名}/todo.md
 
 [输出]
 📊 项目进度：{项目名}
@@ -353,6 +325,15 @@ XiaoYe 执行：
 
 ---
 
-*Coordinator Module v2.1*
-*新增：章节简介管理 + [MODIFY_TRIGGER] 强制触发机制*
-*XiaoYe 内置管理能力*
+## 注意事项
+
+1. **不阻塞创作**：管理流程应辅助创作，不是障碍
+2. **保持简洁**：避免过度文档化
+3. **用户控制**：所有决策由用户最终确认
+4. **灵活应变**：流程可根据实际情况调整
+
+---
+
+*Coordinator Module v3.0*
+*平台无关 · 适用于任意 AI 工具*
+*新增：通用化路径（writing-archive 替代 novels-archive）*
